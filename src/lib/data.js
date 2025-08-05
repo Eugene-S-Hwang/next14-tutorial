@@ -27,6 +27,7 @@
 // MONGODB DATA
 import {Post, User} from "./models"
 import { connectToDB } from "./utils"
+import {unstable_noStore as noStore} from "next/cache"
 
 export const getPosts = async ()=>{
     try{
@@ -41,9 +42,10 @@ export const getPosts = async ()=>{
 }
 
 export const getPost = async (slug)=>{
+    // noStore(); for not caching data from API
     try{
         connectToDB();
-        const post = await Post.find({slug: slug});
+        const post = await Post.findOne({slug});
         return post;
     }
     catch(err){
@@ -55,7 +57,7 @@ export const getPost = async (slug)=>{
 export const getUser = async (id)=>{
     try{
         connectToDB();
-        const user = await User.findbyID(id);
+        const user = await User.findById(id);
         return user;
     }
     catch(err){
